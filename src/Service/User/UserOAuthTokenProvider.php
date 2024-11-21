@@ -26,6 +26,10 @@ class UserOAuthTokenProvider
         $token = $this->repository->getById(Uuid::fromString($userId))->oauthToken($type);
         if ($token === null) {
             return null;
+        } else if ((new \DateTimeImmutable()) > $token->expiresAt()->modify('-1 min')) {
+            $this->em->remove($token);
+            $this->em->flush();
+            return null;
         }
 
         $accessToken = $token->accessToken($this->tokenRefresher);

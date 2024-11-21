@@ -87,6 +87,11 @@ class OAuthToken
         return $this->type() === $type;
     }
 
+    public function expiresAt(): ?\DateTimeImmutable
+    {
+        return $this->expiresAt;
+    }
+
     public function accessToken(UserOAuthTokenRefresher $tokenRefresher): string
     {
         if ($this->expiresAt !== null && (new \DateTimeImmutable()) > $this->expiresAt->modify('-1 min')) {
